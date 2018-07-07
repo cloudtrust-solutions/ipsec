@@ -10,7 +10,7 @@
 # do-release-upgrade
 
 # == Then run this script
-# wget https://raw.githubusercontent.com/cloudtrust-solutions/ipsec/master/setup.sh
+# wget https://github.com/cloudtrust-solutions/ipsec/blob/master/setup.sh
 # chmod u+x setup.sh
 # ./setup.sh
 
