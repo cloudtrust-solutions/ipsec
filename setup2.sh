@@ -244,6 +244,13 @@ conn roadwarrior
   rightdns=8.8.8.8,8.8.4.4
   rightsourceip=${VPNIPPOOL}
   rightsendcert=never
+
+conn ignorelan
+  left=127.0.0.1
+  leftsubnet=10.0.0.0/8
+  rightsubnet=10.0.0.0/8
+  type=passthrough
+  auto=route
 " > /etc/ipsec.conf
 
 echo "${VPNHOST} : RSA \"privkey.pem\"
@@ -501,6 +508,24 @@ Add-VpnConnection -Name "${VPNHOST}" \`
   -EncryptionLevel Maximum \`
   -AuthenticationMethod EAP \`
   -RememberCredential
+Set-VpnConnectionIPsecConfiguration -ConnectionName "${VPNHOST}" \`
+  -AuthenticationTransformConstants GCMAES256 \`
+  -CipherTransformConstants GCMAES256 \`
+  -EncryptionMethod AES256 \`
+  -IntegrityCheckMethod SHA256 \`
+  -DHGroup ECP384 \`
+  -PfsGroup ECP384 \`
+  -Force
+
+or
+
+Add-VpnConnection -Name "${VPNHOST}" \`
+  -ServerAddress "${VPNHOST}" \`
+  -TunnelType IKEv2 \`
+  -EncryptionLevel Maximum \`
+  -AuthenticationMethod EAP \`
+  -RememberCredential \`
+  -SplitTunneling
 Set-VpnConnectionIPsecConfiguration -ConnectionName "${VPNHOST}" \`
   -AuthenticationTransformConstants GCMAES256 \`
   -CipherTransformConstants GCMAES256 \`
