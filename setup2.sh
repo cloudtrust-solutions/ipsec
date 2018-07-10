@@ -10,9 +10,9 @@
 # do-release-upgrade
 
 # == Then run this script
-# wget https://raw.githubusercontent.com/cloudtrust-solutions/ipsec/master/setup.sh
-# chmod u+x setup.sh
-# ./setup.sh
+# wget https://raw.githubusercontent.com/cloudtrust-solutions/ipsec/master/setup2.sh
+# chmod u+x setup2.sh
+# ./setup2.sh
 
 echo
 echo "=== https://github.com/cloudtrust-solutions/ipsec ==="
