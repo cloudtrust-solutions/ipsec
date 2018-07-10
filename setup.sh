@@ -509,6 +509,24 @@ Set-VpnConnectionIPsecConfiguration -ConnectionName "${VPNHOST}" \`
   -DHGroup ECP384 \`
   -PfsGroup ECP384 \`
   -Force
+
+or
+
+Add-VpnConnection -Name "${VPNHOST}" \`
+  -ServerAddress "${VPNHOST}" \`
+  -TunnelType IKEv2 \`
+  -EncryptionLevel Maximum \`
+  -AuthenticationMethod EAP \`
+  -RememberCredential \`
+  -SplitTunneling
+Set-VpnConnectionIPsecConfiguration -ConnectionName "${VPNHOST}" \`
+  -AuthenticationTransformConstants GCMAES256 \`
+  -CipherTransformConstants GCMAES256 \`
+  -EncryptionMethod AES256 \`
+  -IntegrityCheckMethod SHA256 \`
+  -DHGroup ECP384 \`
+  -PfsGroup ECP384 \`
+  -Force
 == Android ==
 Download the strongSwan app from the Play Store: https://play.google.com/store/apps/details?id=org.strongswan.android
 Server: ${VPNHOST}
