@@ -1,18 +1,24 @@
+########################################################
 # https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 # https://www.digitalocean.com/community/tutorials/how-to-use-certbot-standalone-mode-to-retrieve-let-s-encrypt-ssl-certificates
 # https://www.digitalocean.com/community/tutorials/how-to-set-up-an-ikev2-vpn-server-with-strongswan-on-ubuntu-16-04
+########################################################
 
 #!/bin/bash -e
 
+########################################################
 # == Update to 18.04 if required:
 # apt-get update
 # apt-get upgrade
 # do-release-upgrade
+########################################################
 
+########################################################
 # == Then run this script
 # wget https://raw.githubusercontent.com/cloudtrust-solutions/ipsec/master/setup.sh
 # chmod u+x setup.sh
 # ./setup.sh
+########################################################
 
 echo
 echo "=== https://github.com/cloudtrust-solutions/ipsec ==="
@@ -103,10 +109,12 @@ echo
 echo "--- Configuring firewall ---"
 echo
 
+########################################################
 # firewall
 # https://www.strongswan.org/docs/LinuxKongress2009-strongswan.pdf
 # https://wiki.strongswan.org/projects/strongswan/wiki/ForwardingAndSplitTunneling
 # https://www.zeitgeist.se/2013/11/26/mtu-woes-in-ipsec-tunnels-how-to-fix/
+########################################################
 
 iptables -P INPUT   ACCEPT
 iptables -P FORWARD ACCEPT
@@ -116,7 +124,9 @@ iptables -F
 iptables -t nat -F
 iptables -t mangle -F
 
+########################################################
 # INPUT
+########################################################
 
 # accept anything already accepted
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -135,7 +145,9 @@ iptables -I INPUT -i $ETH0ORSIMILAR -m state --state NEW -m recent --update --se
 iptables -A INPUT -p tcp --dport $SSHPORT -j ACCEPT
 
 
+########################################################
 # VPN
+########################################################
 
 # accept IPSec/NAT-T for VPN (ESP not needed with forceencaps, as ESP goes inside UDP)
 iptables -A INPUT -p udp --dport  500 -j ACCEPT
@@ -153,7 +165,9 @@ iptables -t nat -A POSTROUTING -s $VPNIPPOOL -o $ETH0ORSIMILAR -m policy --pol i
 iptables -t nat -A POSTROUTING -s $VPNIPPOOL -o $ETH0ORSIMILAR -j MASQUERADE
 
 
+########################################################
 # fall through to drop any other input and forward traffic
+########################################################
 
 iptables -A INPUT   -j DROP
 iptables -A FORWARD -j DROP
@@ -195,9 +209,11 @@ echo
 echo "--- Configuring VPN ---"
 echo
 
+########################################################
 # ip_forward is for VPN
 # ip_no_pmtu_disc is for UDP fragmentation
 # others are for security
+########################################################
 
 grep -Fq 'cloudtrust-solutions/ipsec' /etc/sysctl.conf || echo '
 # https://github.com/cloudtrust-solutions/ipsec
@@ -213,9 +229,11 @@ net.ipv6.conf.lo.disable_ipv6 = 1
 
 sysctl -p
 
+########################################################
 # these ike and esp settings are tested on Mac 10.12, iOS 10 and Windows 10
 # iOS/Mac with appropriate configuration profiles use AES_GCM_16_256/PRF_HMAC_SHA2_256/ECP_521 
 # Windows 10 uses AES_CBC_256/HMAC_SHA2_256_128/PRF_HMAC_SHA2_256/ECP_384 
+########################################################
 
 echo "config setup
   strictcrlpolicy=yes
@@ -258,7 +276,9 @@ echo
 echo "--- User ---"
 echo
 
+########################################################
 # user + SSH
+########################################################
 
 id -u $LOGINUSERNAME &>/dev/null || adduser --disabled-password --gecos "" $LOGINUSERNAME
 echo "${LOGINUSERNAME}:${LOGINPASSWORD}" | chpasswd
@@ -544,6 +564,8 @@ echo "--- How to connect ---"
 echo
 echo "Connection instructions have been emailed to you, and can also be found in your home directory, /home/${LOGINUSERNAME}"
 
+########################################################
 # necessary for IKEv2?
 # Windows: https://support.microsoft.com/en-us/kb/926179
 # HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PolicyAgent += AssumeUDPEncapsulationContextOnSendRule, DWORD = 2
+########################################################
